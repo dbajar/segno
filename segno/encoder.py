@@ -362,7 +362,8 @@ def write_padding_bits(buff, version, length):
     # the final bit (least significant bit) of the data stream to extend it
     # to the codeword boundary. [...]
     if version not in (consts.VERSION_M1, consts.VERSION_M3):
-        buff.extend([0] * (8 - (length % 8)))
+        # Note: modulo with negative numbers is 'well-bahaved' in python, so this is safe for length of 0
+        buff.extend([0] * (8 - ((length - 1) % 8) - 1))
 
 
 def write_pad_codewords(buff, version, capacity, length):
